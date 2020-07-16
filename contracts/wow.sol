@@ -17,6 +17,7 @@ contract WoW is ERC20, Pausable, Ownable {
 
     constructor() public ERC20(NAME, SYMBOL) Pausable() Ownable() {
         _mint(msg.sender, INITIAL_SUPPLY);
+        approve(msg.sender, INITIAL_SUPPLY);
     }
 
     // transfer that sends using the contract owner
