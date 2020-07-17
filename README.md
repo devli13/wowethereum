@@ -23,6 +23,6 @@ npm install --global truffle
 
 OpenZeppelin contracts will get downloaded to your local directory via:
 
-``` base
+``` bash
 npm install
 ```
