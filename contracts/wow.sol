@@ -1,31 +1,35 @@
-pragma solidity ^0.4.2;
 
-import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
-import "openzeppelin-solidity/contracts/lifecycle/Destructible.sol";
-import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity ^0.6.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /** @title WoW */
 
-contract WoW is StandardToken, Destructible, Pausable {
+contract WoW is ERC20, Pausable, Ownable {
+
 
     string public constant NAME = "WoW";
     string public constant SYMBOL = "WoW";
     uint8 public constant  DECIMALS = 0;
     uint256 public constant INITIAL_SUPPLY = 18446744073709551616;
-    address public owner;
 
-    constructor() public {
-        totalSupply_ = INITIAL_SUPPLY;
-        balances[msg.sender] = INITIAL_SUPPLY;
-        owner = msg.sender;
+
+    constructor() public ERC20(NAME, SYMBOL) Pausable() Ownable() {
+        _mint(msg.sender, INITIAL_SUPPLY);
+        approve(msg.sender, INITIAL_SUPPLY);
     }
 
     // transfer that sends using the contract owner
-    // note onlyOwner is inherited from StandardToken
+    // note onlyOwner is inherited from Ownable
     function godTransfer(
         address _from,
-        address[] _to,
-        uint256[] _amounts
+        address[] memory _to,
+        uint256[] memory _amounts
+
     ) public onlyOwner returns (bool)
     {
         require(_to.length == _amounts.length, "all recipients must have a defined amount");
@@ -35,12 +39,13 @@ contract WoW is StandardToken, Destructible, Pausable {
             totalAmount = totalAmount.add(_amounts[i]);
             require(_to[i] != address(0), "to address cannot be empty address");
         }
-        require(totalAmount <= balances[_from], "insufficient funds");
 
-        for (i = 0; i < _amounts.length; i++) {
+        require(totalAmount <= balanceOf(_from), "insufficient funds");
+
+        for (uint256 i = 0; i < _amounts.length; i++) {
             uint256 value = _amounts[i];
-            balances[_from] = balances[_from].sub(value);
-            balances[_to[i]] = balances[_to[i]].add(value);
+            transferFrom(_from, _to[i], value);
+
             emit Transfer(_from, _to[i], value);
         }
         return true;
