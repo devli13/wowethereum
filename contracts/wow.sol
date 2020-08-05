@@ -14,7 +14,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol";
 
 /** @title WoW */
 
-contract WoW is ERC20, Pausable, Ownable {
+contract WoW is ERC20, Pausable, Ownable, ERC20Detailed {
 
 
     string public constant NAME = "WoW";
