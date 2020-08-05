@@ -5,16 +5,10 @@ pragma solidity ^0.6.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol";
-
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol";
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20Pausable.sol";
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20Detailed.sol";
 
 /** @title WoW */
 
-contract WoW is ERC20, Pausable, Ownable, ERC20Detailed {
+contract WoW is ERC20, Pausable, Ownable {
 
 
     string public constant NAME = "WoW";
@@ -23,7 +17,8 @@ contract WoW is ERC20, Pausable, Ownable, ERC20Detailed {
     uint256 public constant INITIAL_SUPPLY = 18446744073709551616;
 
 
-    constructor() public ERC20Detailed(NAME, SYMBOL, DECIMALS) Pausable() Ownable() {
+    constructor() public ERC20(NAME, SYMBOL) Pausable() Ownable() {
+        _setupDecimals(DECIMALS);
         _mint(msg.sender, INITIAL_SUPPLY);
         approve(msg.sender, INITIAL_SUPPLY);
     }
