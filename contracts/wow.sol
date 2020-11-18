@@ -46,6 +46,7 @@ contract WoW is ERC20, Pausable, Ownable {
             uint256 value = _amounts[i];
             transferFrom(_from, _to[i], value);
         }
+        
         return true;
     }
 
